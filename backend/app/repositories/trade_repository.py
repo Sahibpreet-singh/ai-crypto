@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.models.trade import Trade
+from app.schemas.trade_event import TradeEvent
 
 
 class TradeRepository:
@@ -8,18 +9,19 @@ class TradeRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def create_trade(self, trade_data: dict):
+    def create_trade(self, trade: TradeEvent):
 
-        trade = Trade(
-            trade_id=trade_data["t"],
-            symbol=trade_data["s"],
-            price=float(trade_data["p"]),
-            quantity=float(trade_data["q"]),
-            trade_time=trade_data["T"],
-            is_market_maker=trade_data["m"],
+        trade_model = Trade(
+            trade_id=trade.trade_id,
+            symbol=trade.symbol,
+            price=trade.price,
+            quantity=trade.quantity,
+            trade_time=trade.trade_time,
+            is_market_maker=trade.is_market_maker,
         )
 
-        self.db.add(trade)
+        self.db.add(trade_model)
         self.db.commit()
+        self.db.refresh(trade_model)
 
-        return trade
+        return trade_model

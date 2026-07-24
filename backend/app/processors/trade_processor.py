@@ -1,29 +1,33 @@
 from sqlalchemy.orm import Session
 
-from app.services.trade_service import save_trade
+from app.cache.redis_service import RedisService
+from app.repositories.trade_repository import TradeRepository
+from app.schemas.trade_event import TradeEvent
 
 
 class TradeProcessor:
 
     def __init__(self, db: Session):
-        self.db = db
+        self.repository = TradeRepository(db)
+        self.redis = RedisService()
 
-    def process_trade(self, trade: dict):
+    def process_trade(self, trade: TradeEvent):
 
-        # 1. Save trade
-        save_trade(self.db, trade)
+        # Save in PostgreSQL
+        self.repository.create_trade(trade)
 
-        # 2. Update Redis
+        # Cache latest trade
+        self.redis.cache_latest_trade(trade)
+        self.redis.cache_latest_price(trade)
+
         # TODO
+        # Whale Detection
 
-        # 3. Whale Detection
         # TODO
+        # Pump Detection
 
-        # 4. Pump Detection
         # TODO
+        # Broadcast
 
-        # 5. Broadcast to WebSocket clients
         # TODO
-
-        # 6. AI Pipeline
-        # TODO
+        # AI
