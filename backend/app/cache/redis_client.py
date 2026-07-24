@@ -1,11 +1,8 @@
-import os
-from dotenv import load_dotenv
-from redis import Redis
+from upstash_redis import Redis
 
-load_dotenv()
+from app.core.config import settings
 
-redis_client = Redis(
-    host=os.getenv("REDIS_HOST", "localhost"),
-    port=int(os.getenv("REDIS_PORT", 6379)),
-    decode_responses=True,
+redis = Redis(
+    url=settings.UPSTASH_REDIS_REST_URL,
+    token=settings.UPSTASH_REDIS_REST_TOKEN,
 )
