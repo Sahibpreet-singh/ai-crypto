@@ -1,23 +1,29 @@
 import json
-from app.database.database import SessionLocal
-from app.services.trade_service import save_trade
+
 from confluent_kafka import Consumer
+
+from app.database.database import SessionLocal
+from app.mappers.binance_mapper import BinanceMapper
+from app.processors.trade_processor import TradeProcessor
 
 
 consumer = Consumer(
     {
         "bootstrap.servers": "localhost:9092",
-        "group.id": "trade-consumer-group",
-        "auto.offset.reset": "earliest",
+        "group.id": "trade-consumers",
+        "auto.offset.reset": "latest",
     }
 )
 
 consumer.subscribe(["trade_events"])
 
-print("Waiting for trades...\n")
 
-try:
+def consume():
+
+    print("Kafka Consumer Started...")
+
     while True:
+
         msg = consumer.poll(1.0)
 
         if msg is None:
@@ -27,19 +33,21 @@ try:
             print(msg.error())
             continue
 
-        trade = json.loads(msg.value().decode("utf-8"))
+        trade_json = json.loads(msg.value().decode())
+
+        trade = BinanceMapper.map_trade(trade_json)
 
         db = SessionLocal()
 
         try:
-            save_trade(db, trade)
-            print(f"Saved Trade: {trade['s']}")
+            processor = TradeProcessor(db)
+            processor.process_trade(trade)
+
+            print(f"Processed {trade.symbol} | {trade.price}")
 
         finally:
             db.close()
 
-except KeyboardInterrupt:
-    print("\nStopping consumer...")
 
-finally:
-    consumer.close()
+if __name__ == "__main__":
+    consume()
