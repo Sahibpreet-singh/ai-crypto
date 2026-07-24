@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.market import router as market_router
 
@@ -6,12 +7,22 @@ app = FastAPI(
     title="Crypto Intelligence Platform",
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",  # Vite
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(market_router)
 
 
 @app.get("/")
-async def root():
+def root():
     return {
         "project": "Crypto Intelligence Platform",
-        "status": "Running",
-    }   
+        "status": "running",
+    }
