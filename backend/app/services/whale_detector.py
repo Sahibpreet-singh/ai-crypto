@@ -5,7 +5,7 @@ from app.schemas.whale_event import WhaleEvent
 class WhaleDetector:
 
     # Trigger for trades worth at least $1,000,000
-    THRESHOLD_USD = 1000
+    THRESHOLD_USD = 1000000
 
     def detect(self, trade: TradeEvent):
 
