@@ -73,17 +73,17 @@ class TradeProcessor:
         whale = self.whale_detector.detect(trade_event)
         if whale:
             self.whale_repository.create(whale)
-            print(f"\n🐋 WHALE | {whale.symbol} | ${whale.value_usd:,.2f} | {whale.side}")
+            print(f"\n WHALE | {whale.symbol} | ${whale.value_usd:,.2f} | {whale.side}")
 
         # ── 4. Pump / Dump detection ───────────────────────────────────
         pump = _pump_detector.detect(trade_event, self.db)
         if pump:
-            print(f"\n🚀 {pump.event_type} | {pump.symbol} | {pump.change_pct:+.2f}%")
+            print(f"\n[whale] {pump.event_type} | {pump.symbol} | {pump.change_pct:+.2f}%")
 
         # ── 5. Volume spike detection ──────────────────────────────────
         spike = _volume_detector.update(trade_event, self.db)
         if spike:
-            print(f"\n📈 VOLUME SPIKE | {spike.symbol} | {spike.volume_ratio:.1f}x avg")
+            print(f"\n VOLUME SPIKE | {spike.symbol} | {spike.volume_ratio:.1f}x avg")
 
         # ── 6. Update in-memory technical indicators ───────────────────
         _indicator_service.update(trade_event)

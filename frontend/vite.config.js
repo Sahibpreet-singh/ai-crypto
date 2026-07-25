@@ -6,10 +6,11 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/market': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-      },
+      '/market': { target: 'http://localhost:8000', changeOrigin: true },
+      '/analytics': { target: 'http://localhost:8000', changeOrigin: true },
+      '/pump': { target: 'http://localhost:8000', changeOrigin: true },
+      '/volume': { target: 'http://localhost:8000', changeOrigin: true },
+      '/indicators': { target: 'http://localhost:8000', changeOrigin: true },
     },
   },
 })
