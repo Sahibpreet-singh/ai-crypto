@@ -1,33 +1,45 @@
 from sqlalchemy.orm import Session
 
-from app.cache.redis_service import RedisService
+
 from app.repositories.trade_repository import TradeRepository
-from app.schemas.trade_event import TradeEvent
+from app.repositories.whale_repository import WhaleRepository
+from app.services.whale_detector import WhaleDetector
 
 
 class TradeProcessor:
 
     def __init__(self, db: Session):
-        self.repository = TradeRepository(db)
-        self.redis = RedisService()
+        self.trade_repository = TradeRepository(db)
+        self.whale_repository = WhaleRepository(db)
+        self.whale_detector = WhaleDetector()
 
-    def process_trade(self, trade: TradeEvent):
+    def process_trade(self, trade_event: dict):
 
-        # Save in PostgreSQL
-        self.repository.create_trade(trade)
+        
+
+        # Save trade
+        self.trade_repository.create_trade(trade_event)
 
         # Cache latest trade
-        self.redis.cache_latest_trade(trade)
-        self.redis.cache_latest_price(trade)
-
         # TODO
+
         # Whale Detection
+        whale = self.whale_detector.detect(trade_event)
 
-        # TODO
+        if whale:
+            self.whale_repository.create(whale)
+
+            print("\n🐋 WHALE DETECTED")
+            print(f"Symbol   : {whale.symbol}")
+            print(f"Value    : ${whale.value_usd:,.2f}")
+            print(f"Side     : {whale.side}")
+            print("-" * 40)
+
         # Pump Detection
-
         # TODO
-        # Broadcast
 
+        # WebSocket
         # TODO
-        # AI
+
+        # AI Pipeline
+        # TODO

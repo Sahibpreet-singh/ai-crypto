@@ -1,0 +1,10 @@
+{
+  "name": "majorproject-3",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n API,CONSUMER,PRODUCER,FRONTEND -c blue,green,yellow,magenta \"cd backend && uv run uvicorn app.main:app --reload\" \"cd backend && uv run python -m app.kafka.consumer\" \"cd backend && uv run python -m app.websocket.binance_client\" \"cd frontend && npm run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

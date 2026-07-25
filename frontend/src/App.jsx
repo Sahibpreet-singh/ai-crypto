@@ -9,7 +9,7 @@ const App = () => {
   useEffect(() => {
     const check = async () => {
       try {
-        await getLatestTrade('BTC')
+        await getLatestTrade('BTCUSDT')
         setIsLive(true)
       } catch {
         setIsLive(false)

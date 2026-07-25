@@ -6,7 +6,7 @@ import Loading from '../components/Loading'
 import { RiErrorWarningLine, RiRefreshLine } from 'react-icons/ri'
 
 const Dashboard = () => {
-  const { btcLatest, ethLatest, trades, loading, error } = useMarketData()
+  const { btcLatest, trades, loading, error } = useMarketData()
 
   if (loading) {
     return <Loading />
@@ -38,7 +38,6 @@ const Dashboard = () => {
       {/* Price Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <PriceCard symbol="BTC" trade={btcLatest} />
-        <PriceCard symbol="ETH" trade={ethLatest} />
       </div>
 
       {/* Chart */}

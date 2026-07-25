@@ -5,7 +5,6 @@ const REFRESH_INTERVAL = 2000
 
 export const useMarketData = () => {
   const [btcLatest, setBtcLatest] = useState(null)
-  const [ethLatest, setEthLatest] = useState(null)
   const [trades, setTrades] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -15,16 +14,14 @@ export const useMarketData = () => {
 
   const fetchAll = useCallback(async () => {
     try {
-      const [btc, eth, tradeList] = await Promise.all([
-        getLatestTrade('BTC'),
-        getLatestTrade('ETH'),
-        getLatestTrades('BTC', 100),
+      const [btc, tradeList] = await Promise.all([
+        getLatestTrade('BTCUSDT'),
+        getLatestTrades('BTCUSDT', 100),
       ])
 
       if (!mountedRef.current) return
 
       setBtcLatest(btc)
-      setEthLatest(eth)
       setTrades(tradeList)
       setError(null)
     } catch (err) {
@@ -37,7 +34,9 @@ export const useMarketData = () => {
 
   useEffect(() => {
     mountedRef.current = true
+
     fetchAll()
+
     intervalRef.current = setInterval(fetchAll, REFRESH_INTERVAL)
 
     return () => {
@@ -46,5 +45,10 @@ export const useMarketData = () => {
     }
   }, [fetchAll])
 
-  return { btcLatest, ethLatest, trades, loading, error }
+  return {
+    btcLatest,
+    trades,
+    loading,
+    error,
+  }
 }

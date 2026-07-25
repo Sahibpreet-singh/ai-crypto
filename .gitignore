@@ -15,6 +15,7 @@ frontend/dist/
 frontend/.next/
 frontend/.env
 
+node_modules
 # -----------------------
 # IDE
 # -----------------------

@@ -25,8 +25,7 @@ const formatTime = (tradeTime) => {
 }
 
 const icons = {
-  BTC: RiBitCoinLine,
-  ETH: RiCoinLine,
+  BTC: RiBitCoinLine
 }
 
 const PriceCard = ({ symbol, trade }) => {
