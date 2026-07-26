@@ -12,7 +12,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://ai-crypto-red.vercel.app",  # Vite
+        "https://ai-crypto-e2fr41cqt-sahibpreet-singhs-projects.vercel.app",  # Vite
     ],
     allow_credentials=True,
     allow_methods=["*"],
