@@ -11,7 +11,8 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",  # Vite
+        "http://localhost:5173",
+        "https://ai-crypto-qrc0.onrender.com",  # Vite
     ],
     allow_credentials=True,
     allow_methods=["*"],
