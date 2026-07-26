@@ -11,8 +11,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
-        "https://ai-crypto-e2fr41cqt-sahibpreet-singhs-projects.vercel.app",  # Vite
+        "*",  # Vite
     ],
     allow_credentials=True,
     allow_methods=["*"],
